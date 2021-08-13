@@ -380,6 +380,7 @@ class Docker(RunnerType):
         if ipc:
             options['ipc'] = ipc
         rest_config = stringify_options(options)
+        print('rest_config', rest_config)
         test_gpu = f"""
                 echo 'Testing nvidia-smi inside docker'
                 {envs if envs else ""} {docker_cmd} run --rm {rest_config} {image} nvidia-smi
