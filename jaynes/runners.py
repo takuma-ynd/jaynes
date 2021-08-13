@@ -15,14 +15,14 @@ def inline(script: str) -> str:
 
 def stringify_options(options: dict) -> str:
     """if value is a list or tuple, it is unpacked"""
-    options = []
+    str_options = []
     for k, v in options.items():
         if isinstance(v, (tuple, list)):
             for o in v:
-                options.append(f'--{k.replace("_", "-")}="{o}"')
+                str_options.append(f'--{k.replace("_", "-")}="{o}"')
         else:
-            options.append(f'--{k.replace("_", "-")}="{v}"')
-    return " ".join(options)
+            str_options.append(f'--{k.replace("_", "-")}="{v}"')
+    return " ".join(str_options)
 
 
 class RunnerType:
