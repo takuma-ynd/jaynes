@@ -382,7 +382,7 @@ class Docker(RunnerType):
         rest_config = stringify_options(options)
         print('rest_config', rest_config)
         test_gpu = f"""
-                set -x
+                echo 'docker command: {docker_cmd} run --rm {rest_config} {image} nvidia-smi'
                 echo 'Testing nvidia-smi inside docker'
                 {envs if envs else ""} {docker_cmd} run --rm {rest_config} {image} nvidia-smi
                 """
