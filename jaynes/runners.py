@@ -276,6 +276,7 @@ class Simple(RunnerType):
 
         test_gpu = f"""
                 echo 'Testing nvidia-smi inside docker'
+                echo 'That is a lie lol'
                 {envs if envs else ""} nvidia-smi
                 """
         if detach:
@@ -382,8 +383,8 @@ class Docker(RunnerType):
         rest_config = stringify_options(options)
         print('rest_config', rest_config)
         test_gpu = f"""
-                echo 'docker command: {docker_cmd} run --rm {rest_config} {image} nvidia-smi'
                 echo 'Testing nvidia-smi inside docker'
+                echo 'docker command: {docker_cmd} run --rm {rest_config} {image} nvidia-smi'
                 {envs if envs else ""} {docker_cmd} run --rm {rest_config} {image} nvidia-smi
                 """
         # note: always connect the docker to stdin and stdout.
