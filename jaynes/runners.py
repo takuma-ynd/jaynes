@@ -14,10 +14,10 @@ def inline(script: str) -> str:
 
 
 def stringify_options(options: dict) -> str:
-    """if value is a list, it is unpacked"""
+    """if value is a list or tuple, it is unpacked"""
     options = []
     for k, v in options.items():
-        if isinstance(v, list):
+        if isinstance(v, (tuple, list)):
             for o in v:
                 options.append(f'--{k.replace("_", "-")}="{o}"')
         else:
