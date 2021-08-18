@@ -13,6 +13,18 @@ def inline(script: str) -> str:
     return script if script.endswith(';') else f'{script};'
 
 
+def stringify_options(options: dict) -> str:
+    """if value is a list or tuple, it is unpacked"""
+    str_options = []
+    for k, v in options.items():
+        if isinstance(v, (tuple, list)):
+            for o in v:
+                str_options.append(f'--{k.replace("_", "-")}="{o}"')
+        else:
+            str_options.append(f'--{k.replace("_", "-")}="{v}"')
+    return " ".join(str_options)
+
+
 class RunnerType:
     @classmethod
     def from_yaml(cls, _, node):
@@ -109,7 +121,7 @@ class Slurm(RunnerType):
         if comment:
             option_str += f' --comment="{comment}"'
 
-        extra_options = " ".join([f'--{k.replace("_", "-")}="{v}"' for k, v in options.items()])
+        extra_options = stringify_options(options)
         if args:
             extra_options = "".join([f"--{a} " for a in args]) + extra_options
 
@@ -209,7 +221,7 @@ class SlurmManager(RunnerType):
 
         # some cluster only allows --gres=gpu:[1-]
         gres = f"--gres=gpu:{n_gpu}" if n_gpu else ""
-        extra_options = " ".join([f"--{k.replace('_', '-')}='{v}'" for k, v in options.items()])
+        extra_options = stringify_options(options)
         if args:
             extra_options = "".join([f"--{a} " for a in args]) + extra_options
         if startup:
@@ -399,7 +411,7 @@ class Docker(RunnerType):
             options['net'] = net
         if ipc:
             options['ipc'] = ipc
-        rest_config = " ".join(f"--{k.replace('_', '-')}={v}" for k, v in options.items())
+        rest_config = stringify_options(options)
         test_gpu = f"""
                 echo 'Testing nvidia-smi inside docker'
                 {envs if envs else ""} {docker_cmd} run --rm {rest_config} {image} nvidia-smi
